@@ -82,10 +82,11 @@ SELECT E.NOME
 FROM ESTADIO E
 WHERE E.NOME IN (SELECT P.ESTADIO_NOME
                 FROM PARTIDA P
-                WHERE P.ESTADIO_NOME = E.NOME AND P.FASE = 'FINAL');
+                WHERE P.ESTADIO_NOME = E.NOME AND P.FASE = 'final');
 
--- LISTAR AS FUNCOES DOS JOGADORES QUE PARTICIPARAM DE PELO MENOS DUAS COPAS.
-SELECT J.FUNCAO
+-- LISTAR O NOME E A FUNCAO DOS JOGADORES QUE PARTICIPARAM DE PELO 
+-- MENOS DUAS COPAS.
+SELECT J.NOME, J.FUNCAO
 FROM JOGADOR J
 WHERE J.ID_FIFA IN (SELECT JC.JOGADOR_ID
                     FROM JOGADOR_CONVOCADO JC
@@ -104,7 +105,7 @@ WHERE NOT EXISTS (SELECT *
                   FROM TREINAMENTO T
                   WHERE T.ESTADIO_NOME = E.NOME);
 
--- LISTAR O NOME DOS JOGADORES QUE NÃO PARTICIPARAM DE NENHUMA COPA DO MUNDO.
+-- LISTAR O NOME DOS TECNICOS QUE NÃO PARTICIPARAM DE NENHUMA COPA DO MUNDO.
 SELECT T.NOME
 FROM TECNICO T
 WHERE NOT EXISTS (SELECT * 
@@ -131,15 +132,14 @@ FROM (SELECT COUNT(*) AS NUM_ESTADIOS_M
       GROUP BY NOME);
 
 -- LISTAR OS CODIGOS DAS SELEÇÕES QUE VENCERAM MAIS COPAS.
--- TA DANDO ERRO PQ NÃO TEM NENHUMA PARTICIPAÇÃO AINDA. O ORACLE RETORNA `INVALID_NUMBER`.
 SELECT P.SELECAO_COD
 FROM PARTICIPA P
-WHERE P.COLOCACAO = 'CAMPEAO'
+WHERE P.COLOCACAO = 1
 GROUP BY P.SELECAO_COD
 HAVING COUNT(*) = (SELECT MAX(NUM_VITORIAS)
                    FROM (SELECT COUNT(*) AS NUM_VITORIAS
                          FROM PARTICIPA P2
-                         WHERE P2.COLOCACAO = 'CAMPEAO'
+                         WHERE P2.COLOCACAO = 1
                          GROUP BY P2.SELECAO_COD));
 
 -----------------------------------------------------------------------------
@@ -162,7 +162,7 @@ WHERE (E.END_CIDADE, E.END_RUA) = (SELECT E2.END_CIDADE, E2.END_RUA
                                   FROM ESTADIO E2
                                   WHERE E2.NOME = (SELECT P.ESTADIO_NOME
                                                   FROM PARTIDA P
-                                                  WHERE P.FASE = 'FINAL' AND P.COPA_ANO = '2014'));
+                                                  WHERE P.FASE = 'final' AND P.COPA_ANO = '2014'));
 
 -----------------------------------------------------------------------------
 ------------- CONSULTAS COM SUBCONSULTAS DO TIPO TABELA         -------------
@@ -187,6 +187,17 @@ WHERE S.CODIGO IN (SELECT P.SELECAO_COD
                                             FROM PARTICIPA P2
                                             GROUP BY P2.SELECAO_COD)));
 
+-- LISTAR O CODIGO DAS SELEÇÕES QUE PARTICIPARAM DE MENOS COPAS DO QUE A MÉDIA.
+SELECT S.CODIGO
+FROM SELECAO S
+WHERE S.CODIGO IN (SELECT P.SELECAO_COD
+                   FROM PARTICIPA P
+                   GROUP BY P.SELECAO_COD
+                   HAVING COUNT(*) < (SELECT AVG(NUM_COPAS)
+                                      FROM (SELECT COUNT(*) AS NUM_COPAS
+                                            FROM PARTICIPA P2
+                                            GROUP BY P2.SELECAO_COD)));                                          
+
 -----------------------------------------------------------------------------
 -------------      CONSULTAS COM OPERAÇÃO DE CONJUNTO           -------------
 -----------------------------------------------------------------------------
@@ -207,4 +218,11 @@ WHERE P2.COPA_ANO = '2018';
 -------------                      PL/SQL                       -------------
 -----------------------------------------------------------------------------
 
--- TODO
+--
+CREATE OR REPLACE PROCEDURE ATUALIZA_SAL(V_CPF IN EMPREGADO.CPF%TYPE, V_NOVO_SALARIO IN EMPREGADO.SALARIO%TYPE) IS
+BEGIN
+  UPDATE EMPREGADO
+  SET SALARIO = V_NOVO_SALARIO
+  WHERE CPF = V_CPF;
+  COMMIT;
+END ATUALIZA _SAL;
