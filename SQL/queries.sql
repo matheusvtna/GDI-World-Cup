@@ -164,19 +164,9 @@ WHERE J.ID_FIFA IN (SELECT T.JOGADOR_ID
                     GROUP BY T.JOGADOR_ID
                     HAVING COUNT(*) > 2);
 
--- LISTAR O CODIGO DAS SELEÇÕES QUE PARTICIPARAM DE MAIS COPAS DO QUE A MÉDIA.
-SELECT S.CODIGO
-FROM SELECAO S
-WHERE S.CODIGO IN (SELECT P.SELECAO_COD
-                   FROM PARTICIPA P
-                   GROUP BY P.SELECAO_COD
-                   HAVING COUNT(*) > (SELECT AVG(NUM_COPAS)
-                                      FROM (SELECT COUNT(*) AS NUM_COPAS
-                                            FROM PARTICIPA P2
-                                            GROUP BY P2.SELECAO_COD)));
-
--- LISTAR O CODIGO DAS SELEÇÕES QUE PARTICIPARAM DE MENOS COPAS DO QUE A MÉDIA.
-SELECT S.CODIGO
+-- LISTAR O CODIGO E OS UNIFORMES DAS SELEÇÕES QUE PARTICIPARAM DE MENOS COPAS 
+-- DO QUE A MÉDIA.
+SELECT S.CODIGO, S.UNIFORME_PRINCIPAL, S.UNIFORME_SECUNDARIO
 FROM SELECAO S
 WHERE S.CODIGO IN (SELECT P.SELECAO_COD
                    FROM PARTICIPA P
@@ -184,7 +174,7 @@ WHERE S.CODIGO IN (SELECT P.SELECAO_COD
                    HAVING COUNT(*) < (SELECT AVG(NUM_COPAS)
                                       FROM (SELECT COUNT(*) AS NUM_COPAS
                                             FROM PARTICIPA P2
-                                            GROUP BY P2.SELECAO_COD)));                                          
+                                            GROUP BY P2.SELECAO_COD)));
 
 -----------------------------------------------------------------------------
 -------------      CONSULTAS COM OPERAÇÃO DE CONJUNTO           -------------
