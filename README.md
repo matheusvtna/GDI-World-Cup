@@ -12,7 +12,7 @@ Uma Seleção pode participar de várias Copas, as quais envolvem várias Seleç
 
 Em uma Copa, ocorrem várias partidas, e cada partida só ocorre em uma Copa. Uma Partida é identificada pelo **Ano** da Copa e um **número** indicando a ordem da Partida naquela Copa. Uma Partida deve ter uma Seleção mandante, uma Seleção Visitante, e deve ocorrer em um Estádio. Uma Seleção pode ser mandante ou visitante de várias partidas. Em um Estádio podem ocorrer várias Partidas, mas uma Partida ocorre em apenas um Estádio. Pede-se que seja armazenado também a *fase*, o *resultado*, a *data* e a *hora* da Partida.
 
-Um Estádio, identificado pelo seu **Nome**, contém *endereço*, o qual é formado por *cidade*, *rua* e*número*. Um Jogador pode treinar em vários Estádios, os quais podem ocorrer treinamento de vãrios Jogadores. Um treinamento de um Jogador em um Estádio pode ocorrer em várias datas diferentes.
+Um Estádio, identificado pelo seu **Nome**, contém *endereço*, o qual é formado por *cidade*, *rua* e *número*. Um Jogador pode treinar em vários Estádios, os quais podem ocorrer treinamento de vãrios Jogadores. Um treinamento de um Jogador em um Estádio pode ocorrer em várias datas diferentes.
 
 ### Diagrama EER
 ![image](https://user-images.githubusercontent.com/42243880/218627308-bad02de0-a5f3-4e37-92b2-cf9eab7e2956.png)
